@@ -57,8 +57,11 @@ def blocks(log):
     return [(c, [l for l in o if not NOISE.match(l)]) for c, o in out]
 
 
-def wrap(text):
-    return [text[i:i + COLS] for i in range(0, max(len(text), 1), COLS)]
+def wrap(text, first=COLS):
+    """Split into terminal rows; the first row may be shorter (it follows the prompt)."""
+    rows = [text[:first]]
+    rows += [text[i:i + COLS] for i in range(first, len(text), COLS)]
+    return rows
 
 
 def render(name, spec):
@@ -76,7 +79,7 @@ def render(name, spec):
         if len(output) > MAX_OUTPUT_LINES:
             cut = len(output) - MAX_OUTPUT_LINES
             output = output[:MAX_OUTPUT_LINES] + [f"... ({cut} more lines in docs/logs/{logname})"]
-        first, *rest = wrap(cmd)
+        first, *rest = wrap(cmd, COLS - len(PROMPT) - 1)
         rows.append(f'<span class="p">{html.escape(PROMPT)}</span> <span class="c">{html.escape(first)}</span>')
         rows += [f'<span class="c">{html.escape(r)}</span>' for r in rest]
         for line in output:
