@@ -8,5 +8,5 @@ rec "test -s /var/lib/jenkins/admin-password || openssl rand -base64 15 | sudo t
 rec "sudo install -d -o jenkins -g jenkins /var/lib/jenkins/init.groovy.d && sudo install -o jenkins -g jenkins -m 644 jenkins/security.groovy jenkins/job.groovy /var/lib/jenkins/init.groovy.d/ && ls /var/lib/jenkins/init.groovy.d"
 rec "curl -fsSL --retry 5 -o /tmp/jpm.jar $PM && sudo -u jenkins java -jar /tmp/jpm.jar --war /usr/share/java/jenkins.war -d /var/lib/jenkins/plugins --plugins workflow-aggregator git pipeline-stage-view timestamper 2>&1 | tail -3"
 rec "sudo systemctl daemon-reload && sudo systemctl restart jenkins && for i in \$(seq 60); do curl -fs -o /dev/null localhost:8080/login && break; sleep 3; done; systemctl is-active jenkins"
-rec "curl -s localhost:8080/api/json?tree=jobs[name,url] ; echo"
+rec "curl -sg 'localhost:8080/api/json?tree=jobs[name,url]'; echo"
 rec "curl -sI localhost:8080/ | grep -i -E '^(HTTP|X-Jenkins:)'"
