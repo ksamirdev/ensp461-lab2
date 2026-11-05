@@ -30,9 +30,12 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
+                // Render the new image into the manifest and apply once. Applying k8s/ as-is
+                // and then running set image would first roll the pods back to the
+                // manifest's tag, creating an extra revision on every deploy.
                 sh '''
-                    kubectl apply -f k8s/
-                    kubectl set image deployment/lab2-web web=$PULL_REPO:$VERSION
+                    kubectl apply -f k8s/configmap.yaml -f k8s/service.yaml
+                    sed "s#image: .*#image: $PULL_REPO:$VERSION#" k8s/deployment.yaml | kubectl apply -f -
                     kubectl annotate deployment/lab2-web kubernetes.io/change-cause="jenkins build $BUILD_NUMBER: $VERSION" --overwrite
                     kubectl rollout status deployment/lab2-web --timeout=180s
                 '''
