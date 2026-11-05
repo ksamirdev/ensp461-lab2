@@ -45,6 +45,8 @@ SHOTS = {
     "q7-setup": ("q7-setup.log", [r"usermod", r"kube/config", r"JAVA_OPTS", r"init.groovy.d", r"systemctl restart", r"api/json", r"curl -sI"]),
     "q7-build2": ("q7-build2.log", [r"api/json", r"consoleText"], r"^build |Started by|Commit message|\[Pipeline\] \{ \(|passed|docker (build|push)|kubectl (apply|set image)|successfully rolled|BODY=|Deployed|Finished"),
     "q7-build3": ("q7-build3.log", [r"api/json", r"rollout history", r"get deployment", r"get pods", r"health", r"tags/list"]),
+    "q7-build4": ("q7-build4.log", [r"api/json", r"consoleText", r"rollout history"], r"^build |Started by|Commit message|\[Pipeline\] \{ \(|kubectl (apply|rollout)|sed s#|successfully rolled|BODY=|rolling back|Finished|REVISION|^\d+ +"),
+    "q7-build5": ("q7-build5.log", [r"api/json", r"consoleText", r"rollout history", r"health"], r"^build |Started by|Commit message|\[Pipeline\] \{ \(|sed s#|successfully rolled|^\[[^]]+\] \{\"status|Deployed|Finished|REVISION|^\d+ +|^\{"),
 }
 
 

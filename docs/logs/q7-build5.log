@@ -1,0 +1,291 @@
+$ curl -s 'localhost:8080/job/ensp461-lab2-cd/5/api/json' | python3 -c 'import json,sys; b=json.load(sys.stdin); print("build", b["number"], b["result"], str(b["duration"]//1000)+"s", [c.get("shortDescription") for a in b["actions"] for c in a.get("causes", [])])'
+build 5 SUCCESS 30s ['Started by an SCM change']
+
+$ curl -s 'localhost:8080/job/ensp461-lab2-cd/5/consoleText' | grep -v -E '^\s+at |Counting objects|Compressing objects|Receiving objects|Resolving deltas|^#[0-9]+ (sha256|extracting|transferring)'
+Started by an SCM change
+Checking out git https://github.com/ksamirdev/ensp461-lab2.git into /var/lib/jenkins/workspace/ensp461-lab2-cd@script/650560eccdc9659f9b09fa80bafad4b68e3f5b30215f2242a378de6708ebec31 to read Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/ensp461-lab2-cd@script/650560eccdc9659f9b09fa80bafad4b68e3f5b30215f2242a378de6708ebec31/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/ksamirdev/ensp461-lab2.git # timeout=10
+Fetching upstream changes from https://github.com/ksamirdev/ensp461-lab2.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/ksamirdev/ensp461-lab2.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision d968ba62b3b3409fa1e26ea2fadbd4909b33c443 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f d968ba62b3b3409fa1e26ea2fadbd4909b33c443 # timeout=10
+Commit message: "Wait for the new version to be served consistently in smoke test"
+ > git rev-list --no-walk a4133261dcf8d42e068fe5589e4f40f57fa3d052 # timeout=10
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/ensp461-lab2-cd
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/ensp461-lab2-cd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/ksamirdev/ensp461-lab2.git # timeout=10
+Fetching upstream changes from https://github.com/ksamirdev/ensp461-lab2.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+ > git fetch --tags --force --progress -- https://github.com/ksamirdev/ensp461-lab2.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision d968ba62b3b3409fa1e26ea2fadbd4909b33c443 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f d968ba62b3b3409fa1e26ea2fadbd4909b33c443 # timeout=10
+Commit message: "Wait for the new version to be served consistently in smoke test"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] sh
+[2026-11-05T19:44:16.007Z] + python3 -m venv .venv
+[2026-11-05T19:44:16.928Z] + .venv/bin/pip install -q -r app/requirements.txt pytest
+[2026-11-05T19:44:17.179Z] + .venv/bin/python -m pytest -q tests
+[2026-11-05T19:44:17.430Z] ...                                                                      [100%]
+[2026-11-05T19:44:17.430Z] 3 passed in 0.10s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build image)
+[Pipeline] sh
+[2026-11-05T19:44:17.743Z] + docker build --build-arg APP_VERSION=2.1.5 -f docker/Dockerfile -t localhost:5001/ensp461-lab2:2.1.5 .
+[2026-11-05T19:44:18.299Z] #0 building with "default" instance using docker driver
+[2026-11-05T19:44:18.299Z] 
+[2026-11-05T19:44:18.299Z] #1 [internal] load build definition from Dockerfile
+[2026-11-05T19:44:18.299Z] #1 transferring dockerfile: 596B done
+[2026-11-05T19:44:18.299Z] #1 DONE 0.0s
+[2026-11-05T19:44:18.299Z] 
+[2026-11-05T19:44:18.299Z] #2 [internal] load metadata for public.ecr.aws/docker/library/python:3.12-slim
+[2026-11-05T19:44:19.647Z] #2 DONE 1.5s
+[2026-11-05T19:44:19.647Z] 
+[2026-11-05T19:44:19.647Z] #3 [internal] load .dockerignore
+[2026-11-05T19:44:19.647Z] #3 transferring context: 88B done
+[2026-11-05T19:44:19.647Z] #3 DONE 0.0s
+[2026-11-05T19:44:19.647Z] 
+[2026-11-05T19:44:19.647Z] #4 [1/6] FROM public.ecr.aws/docker/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54
+[2026-11-05T19:44:19.647Z] #4 resolve public.ecr.aws/docker/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54 0.0s done
+[2026-11-05T19:44:19.647Z] #4 DONE 0.0s
+[2026-11-05T19:44:19.647Z] 
+[2026-11-05T19:44:19.647Z] #5 [internal] load build context
+[2026-11-05T19:44:19.647Z] #5 transferring context: 184B done
+[2026-11-05T19:44:19.647Z] #5 DONE 0.0s
+[2026-11-05T19:44:19.647Z] 
+[2026-11-05T19:44:19.647Z] #6 [2/6] WORKDIR /srv
+[2026-11-05T19:44:19.647Z] #6 CACHED
+[2026-11-05T19:44:19.647Z] 
+[2026-11-05T19:44:19.647Z] #7 [3/6] COPY app/requirements.txt .
+[2026-11-05T19:44:19.647Z] #7 CACHED
+[2026-11-05T19:44:19.647Z] 
+[2026-11-05T19:44:19.647Z] #8 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+[2026-11-05T19:44:20.993Z] #8 1.464 Collecting flask==3.1.* (from -r requirements.txt (line 1))
+[2026-11-05T19:44:21.548Z] #8 1.973   Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+[2026-11-05T19:44:22.101Z] #8 2.601 Collecting redis==6.* (from -r requirements.txt (line 2))
+[2026-11-05T19:44:22.352Z] #8 2.762   Downloading redis-6.4.0-py3-none-any.whl.metadata (10 kB)
+[2026-11-05T19:44:22.603Z] #8 3.081 Collecting gunicorn==23.* (from -r requirements.txt (line 3))
+[2026-11-05T19:44:22.856Z] #8 3.240   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+[2026-11-05T19:44:22.856Z] #8 3.358 Collecting blinker>=1.9.0 (from flask==3.1.*->-r requirements.txt (line 1))
+[2026-11-05T19:44:23.108Z] #8 3.505   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+[2026-11-05T19:44:23.360Z] #8 3.604 Collecting click>=8.1.3 (from flask==3.1.*->-r requirements.txt (line 1))
+[2026-11-05T19:44:23.360Z] #8 3.688   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-05T19:44:23.360Z] #8 3.801 Collecting itsdangerous>=2.2.0 (from flask==3.1.*->-r requirements.txt (line 1))
+[2026-11-05T19:44:23.614Z] #8 3.898   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+[2026-11-05T19:44:23.614Z] #8 4.110 Collecting jinja2>=3.1.2 (from flask==3.1.*->-r requirements.txt (line 1))
+[2026-11-05T19:44:23.864Z] #8 4.156   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+[2026-11-05T19:44:24.421Z] #8 4.709 Collecting markupsafe>=2.1.1 (from flask==3.1.*->-r requirements.txt (line 1))
+[2026-11-05T19:44:24.421Z] #8 4.841   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
+[2026-11-05T19:44:24.672Z] #8 5.109 Collecting werkzeug>=3.1.0 (from flask==3.1.*->-r requirements.txt (line 1))
+[2026-11-05T19:44:24.923Z] #8 5.145   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+[2026-11-05T19:44:24.923Z] #8 5.272 Collecting packaging (from gunicorn==23.*->-r requirements.txt (line 3))
+[2026-11-05T19:44:24.923Z] #8 5.429   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+[2026-11-05T19:44:25.174Z] #8 5.503 Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+[2026-11-05T19:44:25.728Z] #8 5.993 Downloading redis-6.4.0-py3-none-any.whl (279 kB)
+[2026-11-05T19:44:26.279Z] #8 6.769 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+[2026-11-05T19:44:26.532Z] #8 6.983 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+[2026-11-05T19:44:26.785Z] #8 7.135 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+[2026-11-05T19:44:27.341Z] #8 7.563 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+[2026-11-05T19:44:27.341Z] #8 7.612 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+[2026-11-05T19:44:27.592Z] #8 7.963 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (24 kB)
+[2026-11-05T19:44:27.847Z] #8 8.113 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+[2026-11-05T19:44:28.401Z] #8 8.689 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+[2026-11-05T19:44:28.401Z] #8 8.890 Installing collected packages: redis, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, flask
+[2026-11-05T19:44:28.956Z] #8 9.364 Successfully installed blinker-1.9.0 click-8.5.0 flask-3.1.3 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 redis-6.4.0 werkzeug-3.1.9
+[2026-11-05T19:44:29.207Z] #8 9.365 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[2026-11-05T19:44:29.207Z] #8 9.620 
+[2026-11-05T19:44:29.207Z] #8 9.620 [notice] A new release of pip is available: 25.0.1 -> 26.3
+[2026-11-05T19:44:29.207Z] #8 9.620 [notice] To update, run: pip install --upgrade pip
+[2026-11-05T19:44:29.458Z] #8 DONE 9.8s
+[2026-11-05T19:44:29.709Z] 
+[2026-11-05T19:44:29.709Z] #9 [5/6] COPY app/ .
+[2026-11-05T19:44:29.709Z] #9 DONE 0.1s
+[2026-11-05T19:44:29.709Z] 
+[2026-11-05T19:44:29.709Z] #10 [6/6] RUN useradd --uid 10001 --no-create-home web
+[2026-11-05T19:44:29.709Z] #10 DONE 0.2s
+[2026-11-05T19:44:29.960Z] 
+[2026-11-05T19:44:29.960Z] #11 exporting to image
+[2026-11-05T19:44:29.960Z] #11 exporting layers
+[2026-11-05T19:44:30.513Z] #11 exporting layers 0.6s done
+[2026-11-05T19:44:30.513Z] #11 exporting manifest sha256:3b93f609c4e2e4ff73c489ad4244c5286da9a0188684e0207bf4cee9b8a9ab46 0.0s done
+[2026-11-05T19:44:30.513Z] #11 exporting config sha256:514e332a6852e7544f38bf3ac3a862213b30d4000d079502a7026e48a098a608 0.0s done
+[2026-11-05T19:44:30.513Z] #11 exporting attestation manifest sha256:2bddd19dd1ce74c02ad44122646b61b164ce83478daed0c8aa7813c5d84f4ae7 0.0s done
+[2026-11-05T19:44:30.513Z] #11 exporting manifest list sha256:f3ea693c67745af6b1d39029db4c7602966dccce7095c674d604f74885d78d50 0.0s done
+[2026-11-05T19:44:30.513Z] #11 naming to localhost:5001/ensp461-lab2:2.1.5 done
+[2026-11-05T19:44:30.513Z] #11 unpacking to localhost:5001/ensp461-lab2:2.1.5
+[2026-11-05T19:44:30.513Z] #11 unpacking to localhost:5001/ensp461-lab2:2.1.5 0.2s done
+[2026-11-05T19:44:30.764Z] #11 DONE 0.9s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push image)
+[Pipeline] sh
+[2026-11-05T19:44:31.123Z] + docker push localhost:5001/ensp461-lab2:2.1.5
+[2026-11-05T19:44:31.123Z] The push refers to repository [localhost:5001/ensp461-lab2]
+[2026-11-05T19:44:31.123Z] acd43e9bebc3: Layer already exists
+[2026-11-05T19:44:31.123Z] 0ba3a3e89cd9: Layer already exists
+[2026-11-05T19:44:31.123Z] 4f4fb700ef54: Layer already exists
+[2026-11-05T19:44:31.123Z] be6a5099ad67: Layer already exists
+[2026-11-05T19:44:31.123Z] 44136fa355b3: Already exists
+[2026-11-05T19:44:31.123Z] a1c4cb104521: Pushed
+[2026-11-05T19:44:31.123Z] 70b4f81c82dc: Layer already exists
+[2026-11-05T19:44:31.123Z] a2ca7e99ac9a: Layer already exists
+[2026-11-05T19:44:31.123Z] 6691a5b9b60f: Pushed
+[2026-11-05T19:44:31.123Z] 0373269344dc: Layer already exists
+[2026-11-05T19:44:31.123Z] 025f34fd6862: Pushed
+[2026-11-05T19:44:31.123Z] 2.1.5: digest: sha256:f3ea693c67745af6b1d39029db4c7602966dccce7095c674d604f74885d78d50 size: 856
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy to Kubernetes)
+[Pipeline] sh
+[2026-11-05T19:44:31.430Z] + kubectl apply -f k8s/configmap.yaml -f k8s/service.yaml
+[2026-11-05T19:44:31.430Z] configmap/lab2-config unchanged
+[2026-11-05T19:44:31.430Z] service/lab2-web unchanged
+[2026-11-05T19:44:31.430Z] + sed s#image: .*#image: lab2-registry:5000/ensp461-lab2:2.1.5# k8s/deployment.yaml
+[2026-11-05T19:44:31.430Z] + kubectl apply -f -
+[2026-11-05T19:44:31.681Z] deployment.apps/lab2-web configured
+[2026-11-05T19:44:31.681Z] + kubectl annotate deployment/lab2-web kubernetes.io/change-cause=jenkins build 5: 2.1.5 --overwrite
+[2026-11-05T19:44:31.681Z] deployment.apps/lab2-web annotated
+[2026-11-05T19:44:31.681Z] + kubectl rollout status deployment/lab2-web --timeout=180s
+[2026-11-05T19:44:31.681Z] Waiting for deployment spec update to be observed...
+[2026-11-05T19:44:31.681Z] Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+[2026-11-05T19:44:36.898Z] Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+[2026-11-05T19:44:36.898Z] Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+[2026-11-05T19:44:36.898Z] Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+[2026-11-05T19:44:37.152Z] Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+[2026-11-05T19:44:37.152Z] Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+[2026-11-05T19:44:37.152Z] Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+[2026-11-05T19:44:38.068Z] Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+[2026-11-05T19:44:38.068Z] deployment "lab2-web" successfully rolled out
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Smoke test)
+[Pipeline] sh
+[2026-11-05T19:44:38.413Z] + kubectl get nodes -o jsonpath={.items[0].status.addresses[0].address}
+[2026-11-05T19:44:38.414Z] + NODE_IP=192.168.49.2
+[2026-11-05T19:44:38.414Z] + ok=0
+[2026-11-05T19:44:38.414Z] + seq 30
+[2026-11-05T19:44:38.414Z] + curl -fsS http://192.168.49.2:30080/health
+[2026-11-05T19:44:38.414Z] + BODY={"status":"UP","uptime_seconds":5,"version":"2.1.5"}
+[2026-11-05T19:44:38.414Z] + echo {"status":"UP","uptime_seconds":5,"version":"2.1.5"}
+[2026-11-05T19:44:38.414Z] {"status":"UP","uptime_seconds":5,"version":"2.1.5"}
+[2026-11-05T19:44:38.414Z] + echo {"status":"UP","uptime_seconds":5,"version":"2.1.5"}
+[2026-11-05T19:44:38.414Z] + grep -q "version":"2.1.5"
+[2026-11-05T19:44:38.414Z] + ok=1
+[2026-11-05T19:44:38.414Z] + [ 1 -ge 5 ]
+[2026-11-05T19:44:38.414Z] + sleep 1
+[2026-11-05T19:44:39.328Z] + curl -fsS http://192.168.49.2:30080/health
+[2026-11-05T19:44:39.328Z] + BODY={"status":"UP","uptime_seconds":1,"version":"2.1.5"}
+[2026-11-05T19:44:39.328Z] + echo {"status":"UP","uptime_seconds":1,"version":"2.1.5"}
+[2026-11-05T19:44:39.328Z] {"status":"UP","uptime_seconds":1,"version":"2.1.5"}
+[2026-11-05T19:44:39.328Z] + echo {"status":"UP","uptime_seconds":1,"version":"2.1.5"}
+[2026-11-05T19:44:39.328Z] + grep -q "version":"2.1.5"
+[2026-11-05T19:44:39.328Z] + ok=2
+[2026-11-05T19:44:39.328Z] + [ 2 -ge 5 ]
+[2026-11-05T19:44:39.328Z] + sleep 1
+[2026-11-05T19:44:40.242Z] + curl -fsS http://192.168.49.2:30080/health
+[2026-11-05T19:44:40.242Z] + BODY={"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:40.242Z] + echo {"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:40.242Z] {"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:40.242Z] + echo {"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:40.242Z] + grep -q "version":"2.1.5"
+[2026-11-05T19:44:40.242Z] + ok=3
+[2026-11-05T19:44:40.242Z] + [ 3 -ge 5 ]
+[2026-11-05T19:44:40.242Z] + sleep 1
+[2026-11-05T19:44:41.593Z] + curl -fsS http://192.168.49.2:30080/health
+[2026-11-05T19:44:41.593Z] + BODY={"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:41.593Z] + echo {"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:41.593Z] {"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:41.593Z] + echo {"status":"UP","uptime_seconds":3,"version":"2.1.5"}
+[2026-11-05T19:44:41.593Z] + grep -q "version":"2.1.5"
+[2026-11-05T19:44:41.593Z] + ok=4
+[2026-11-05T19:44:41.593Z] + [ 4 -ge 5 ]
+[2026-11-05T19:44:41.593Z] + sleep 1
+[2026-11-05T19:44:42.507Z] + curl -fsS http://192.168.49.2:30080/health
+[2026-11-05T19:44:42.507Z] + BODY={"status":"UP","uptime_seconds":4,"version":"2.1.5"}
+[2026-11-05T19:44:42.507Z] + echo {"status":"UP","uptime_seconds":4,"version":"2.1.5"}
+[2026-11-05T19:44:42.507Z] {"status":"UP","uptime_seconds":4,"version":"2.1.5"}
+[2026-11-05T19:44:42.507Z] + echo {"status":"UP","uptime_seconds":4,"version":"2.1.5"}
+[2026-11-05T19:44:42.507Z] + grep -q "version":"2.1.5"
+[2026-11-05T19:44:42.507Z] + ok=5
+[2026-11-05T19:44:42.507Z] + [ 5 -ge 5 ]
+[2026-11-05T19:44:42.507Z] + exit 0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-05T19:44:42.579Z] Deployed ensp461-lab2:2.1.5 to Minikube
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+
+$ kubectl rollout history deployment/lab2-web
+deployment.apps/lab2-web 
+REVISION  CHANGE-CAUSE
+3         bad image
+5         jenkins build 2: 2.1.2
+6         jenkins build 2: 2.1.2
+8         jenkins build 4: 2.1.4
+9         jenkins build 3: 2.1.3
+10        jenkins build 5: 2.1.5
+
+
+$ kubectl get deployment lab2-web -o wide
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                  SELECTOR
+lab2-web   3/3     3            3           18m   web          lab2-registry:5000/ensp461-lab2:2.1.5   app=lab2-web
+
+$ kubectl get pods -l app=lab2-web
+NAME                        READY   STATUS        RESTARTS   AGE
+lab2-web-5d87d6d8cb-bj2hv   1/1     Running       0          12s
+lab2-web-5d87d6d8cb-f8cbc   1/1     Running       0          8s
+lab2-web-5d87d6d8cb-zphnh   1/1     Running       0          7s
+lab2-web-6d6c78f55d-97zt8   1/1     Terminating   0          100s
+
+$ curl -s http://$(minikube ip):30080/health
+{"status":"UP","uptime_seconds":6,"version":"2.1.5"}
+
+$ curl -s localhost:5001/v2/ensp461-lab2/tags/list
+{"name":"ensp461-lab2","tags":["2.0.0","latest","2.0.1","2.1.2","2.1.3","2.1.4","2.1.5"]}
+
