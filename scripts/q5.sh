@@ -1,0 +1,13 @@
+. scripts/rec.sh docs/logs/q5-k8s.log
+rec "minikube start --driver=docker --memory=2048 --cpus=2 --insecure-registry=lab2-registry:5000"
+rec "docker network connect minikube lab2-registry; docker inspect lab2-registry --format '{{range \$k,\$v := .NetworkSettings.Networks}}{{\$k}} {{end}}'"
+rec "minikube status"
+rec "kubectl get nodes -o wide"
+rec "kubectl apply -f k8s/"
+rec "kubectl rollout status deployment/lab2-web --timeout=180s"
+rec "kubectl get deployment,replicaset,service,configmap -l app=lab2-web; kubectl get service lab2-web; kubectl get configmap lab2-config"
+rec "kubectl get pods -l app=lab2-web -o wide"
+rec "kubectl describe deployment lab2-web | grep -E 'Image|Replicas|StrategyType|RollingUpdateStrategy|Environment'"
+rec "curl -s http://\$(minikube ip):30080/"
+rec "curl -s http://\$(minikube ip):30080/health"
+rec "for i in 1 2 3 4 5 6; do curl -s http://\$(minikube ip):30080/ | python3 -c 'import json,sys;print(json.load(sys.stdin)[\"served_by\"])'; done"
