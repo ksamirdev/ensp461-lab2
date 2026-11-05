@@ -31,6 +31,12 @@ spec:
           resources:
             requests: {cpu: 50m, memory: 64Mi}
             limits: {memory: 192Mi}
+          lifecycle:
+            # Keep serving while the endpoint is removed from the Service,
+            # so in-flight and late-routed requests do not fail during rollouts.
+            preStop:
+              exec:
+                command: ["sleep", "5"]
           readinessProbe:
             httpGet: {path: /health, port: 5000}
             periodSeconds: 3
