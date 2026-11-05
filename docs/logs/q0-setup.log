@@ -1,0 +1,62 @@
+$ cat /etc/os-release | head -2; uname -m; whoami
+PRETTY_NAME="Ubuntu 24.04.5 LTS"
+NAME="Ubuntu"
+aarch64
+samir
+
+$ curl -fsSL https://get.docker.com | sudo sh >/dev/null && docker --version
++ sh -c apt-get -qq update >/dev/null
++ sh -c DEBIAN_FRONTEND=noninteractive apt-get -y -qq install ca-certificates curl >/dev/null
++ sh -c install -m 0755 -d /etc/apt/keyrings
++ sh -c curl -fsSL "https://download.docker.com/linux/ubuntu/gpg" -o /etc/apt/keyrings/docker.asc
++ sh -c chmod a+r /etc/apt/keyrings/docker.asc
++ sh -c echo "deb [arch=arm64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable" > /etc/apt/sources.list.d/docker.list
++ sh -c apt-get -qq update >/dev/null
++ apt_flags=-y -qq
++ [ -n  ]
++ sh -c DEBIAN_FRONTEND=noninteractive apt-get -y -qq install docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-ce-rootless-extras docker-buildx-plugin docker-model-plugin >/dev/null
+Using systemd to manage Docker service
++ sh -c systemctl enable --now docker.service 2>/dev/null
+INFO: Docker daemon enabled and started
+
++ sh -c docker version
+Docker version 29.9.3, build 5457199
+
+$ sudo usermod -aG docker samir && echo added-to-docker-group
+added-to-docker-group
+
+$ sudo docker compose version; sudo docker buildx version
+Docker Compose version v5.7.0
+github.com/docker/buildx v0.38.1 0dbe87f36ed472fe36b6796c3f70b4210a731fc5
+
+$ curl -fsSLo /tmp/kubectl https://dl.k8s.io/release/$(curl -fsSL https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl && sudo install /tmp/kubectl /usr/local/bin/kubectl && kubectl version --client
+Client Version: v1.37.2
+Kustomize Version: v5.8.1
+
+$ curl -fsSLo /tmp/minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-arm64 && sudo install /tmp/minikube /usr/local/bin/minikube && minikube version --short
+v1.39.0
+
+$ sudo apt-get install -y -qq python3-venv openjdk-21-jdk-headless fontconfig git curl >/dev/null && java -version
+E: Failed to fetch http://ports.ubuntu.com/ubuntu-ports/pool/main/o/openjdk-21/openjdk-21-jre-headless_21.0.12.1%2b1-1%7e24.04.4_arm64.deb  Connection timed out [IP: 91.189.91.103 80]
+E: Failed to fetch http://ports.ubuntu.com/ubuntu-ports/pool/main/o/openjdk-21/openjdk-21-jdk-headless_21.0.12.1%2b1-1%7e24.04.4_arm64.deb  Connection timed out [IP: 91.189.91.103 80]
+E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+
+$ sudo curl -fsSLo /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key && echo 'deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/' | sudo tee /etc/apt/sources.list.d/jenkins.list && sudo apt-get update -qq && sudo apt-get install -y -qq jenkins >/dev/null; dpkg -s jenkins | grep -E '^(Package|Version)'; systemctl is-active jenkins
+curl: (6) Could not resolve host: pkg.jenkins.io
+dpkg-query: package 'jenkins' is not installed and no information is available
+Use dpkg --info (= dpkg-deb --info) to examine archive files.
+inactive
+
+$ python3 -m venv .venv && .venv/bin/pip -q install -r app/requirements.txt pytest && .venv/bin/python -m pytest -v tests
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.12-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/samir/ensp461-lab2/.venv/bin/python3
+
+

@@ -1,0 +1,118 @@
+$ docker ps --filter name=lab2-web
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+$ docker stop lab2-web
+Error response from daemon: No such container: lab2-web
+
+$ docker ps -a --filter name=lab2-web --format '{{.Names}} {{.Status}}'
+
+$ docker start lab2-web
+Error response from daemon: No such container: lab2-web
+failed to start containers: lab2-web
+
+$ docker restart lab2-web
+Error response from daemon: No such container: lab2-web
+
+$ curl -s localhost:5000/health
+
+$ docker rm -f lab2-web
+
+$ docker ps -a --filter name=lab2-web --format '{{.Names}} {{.Status}}'
+
+$ docker rm -f lab2-registry
+lab2-registry
+
+$ docker run -d --name lab2-registry --restart unless-stopped -p 5001:5000 public.ecr.aws/docker/library/registry:2
+1f115c31b4dcbf3b2802ade5d5f711591d177a4de8422e53ed5f01a818c5603e
+
+$ docker tag ensp461-lab2:2.0.0 localhost:5001/ensp461-lab2:2.0.0
+
+$ docker tag ensp461-lab2:2.0.0 localhost:5001/ensp461-lab2:latest
+
+$ docker images localhost:5001/ensp461-lab2
+IMAGE                                ID             DISK USAGE   CONTENT SIZE   EXTRA
+localhost:5001/ensp461-lab2:2.0.0    1b4b5b620a5f        227MB         49.9MB        
+localhost:5001/ensp461-lab2:latest   1b4b5b620a5f        227MB         49.9MB        
+
+$ docker push --quiet localhost:5001/ensp461-lab2:2.0.0
+localhost:5001/ensp461-lab2:2.0.0
+
+$ docker push --quiet localhost:5001/ensp461-lab2:latest
+localhost:5001/ensp461-lab2:latest
+
+$ curl -s localhost:5001/v2/ensp461-lab2/tags/list
+{"name":"ensp461-lab2","tags":["2.0.0","latest"]}
+
+$ docker rmi localhost:5001/ensp461-lab2:2.0.0 localhost:5001/ensp461-lab2:latest
+Untagged: localhost:5001/ensp461-lab2:2.0.0
+Untagged: localhost:5001/ensp461-lab2:latest
+
+$ docker pull -q localhost:5001/ensp461-lab2:2.0.0
+localhost:5001/ensp461-lab2:2.0.0
+
+$ docker compose -f docker/docker-compose.yml --progress quiet up -d --build && echo started
+started
+
+$ docker compose -f docker/docker-compose.yml ps
+NAME           IMAGE                                          COMMAND                  SERVICE   CREATED          STATUS                            PORTS
+lab2-redis-1   public.ecr.aws/docker/library/redis:7-alpine   "docker-entrypoint.s…"   redis     11 seconds ago   Up 10 seconds (healthy)           6379/tcp
+lab2-web-1     ensp461-lab2:2.0.0                             "gunicorn --bind 0.0…"   web       11 seconds ago   Up 5 seconds (health: starting)   0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp
+
+$ curl -s localhost:5000/visits
+{"visits":1}
+
+$ curl -s localhost:5000/visits
+{"visits":2}
+
+$ docker compose -f docker/docker-compose.yml restart web
+ Container lab2-web-1 Restarting 
+ Container lab2-web-1 Started 
+
+$ curl -s localhost:5000/visits
+{"visits":3}
+
+$ docker compose -f docker/docker-compose.yml down
+ Container lab2-web-1 Stopping 
+ Container lab2-web-1 Stopped 
+ Container lab2-web-1 Removing 
+ Container lab2-web-1 Removed 
+ Container lab2-redis-1 Stopping 
+ Container lab2-redis-1 Stopped 
+ Container lab2-redis-1 Removing 
+ Container lab2-redis-1 Removed 
+ Network lab2_default Removing 
+ Network lab2_default Removed 
+
+$ docker compose -f docker/docker-compose.yml up -d
+ Network lab2_default Creating 
+ Network lab2_default Creating 
+ Network lab2_default Created 
+ Network lab2_default Created 
+ Container lab2-redis-1 Creating 
+ Container lab2-redis-1 Created 
+ Container lab2-web-1 Creating 
+ Container lab2-web-1 Created 
+ Container lab2-redis-1 Starting 
+ Container lab2-redis-1 Started 
+ Container lab2-redis-1 Waiting 
+ Container lab2-redis-1 Healthy 
+ Container lab2-web-1 Starting 
+ Container lab2-web-1 Started 
+
+$ curl -s localhost:5000/visits
+{"visits":4}
+
+$ docker compose -f docker/docker-compose.yml down -v
+ Container lab2-web-1 Stopping 
+ Container lab2-web-1 Stopped 
+ Container lab2-web-1 Removing 
+ Container lab2-web-1 Removed 
+ Container lab2-redis-1 Stopping 
+ Container lab2-redis-1 Stopped 
+ Container lab2-redis-1 Removing 
+ Container lab2-redis-1 Removed 
+ Network lab2_default Removing 
+ Volume lab2_redis-data Removing 
+ Volume lab2_redis-data Removed 
+ Network lab2_default Removed 
+

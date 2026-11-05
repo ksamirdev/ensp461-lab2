@@ -1,0 +1,28 @@
+$ sudo apt-get update -qq -o Acquire::Retries=8 -o Acquire::http::Timeout=30 && sudo apt-get install -y -qq --fix-missing -o Acquire::Retries=8 -o Acquire::http::Timeout=30 python3-venv openjdk-21-jdk-headless fontconfig >/dev/null && java -version
+dpkg-preconfigure: unable to re-open stdin: No such file or directory
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-24.04.4-Ubuntu)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-24.04.4-Ubuntu, mixed mode, sharing)
+
+$ sudo curl --retry 8 --retry-all-errors -fsSLo /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2026.key && echo 'deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/' | sudo tee /etc/apt/sources.list.d/jenkins.list
+deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/
+
+$ sudo apt-get update -qq -o Acquire::Retries=8 -o Acquire::http::Timeout=30 && sudo apt-get install -y -qq -o Acquire::Retries=8 -o Acquire::http::Timeout=30 jenkins >/dev/null; dpkg -s jenkins | grep -E '^(Package|Version)'; systemctl is-active jenkins
+dpkg-preconfigure: unable to re-open stdin: No such file or directory
+Package: jenkins
+Version: 2.580.2
+active
+
+$ python3 -m venv .venv && .venv/bin/pip -q install -r app/requirements.txt pytest && .venv/bin/python -m pytest -v tests
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /home/samir/ensp461-lab2/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/samir/ensp461-lab2
+collecting ... collected 3 items
+
+tests/test_app.py::test_health PASSED                                    [ 33%]
+tests/test_app.py::test_index_names_owner PASSED                         [ 66%]
+tests/test_app.py::test_visits_without_redis_is_503 PASSED               [100%]
+
+============================== 3 passed in 0.06s ===============================
+

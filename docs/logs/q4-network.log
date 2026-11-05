@@ -1,0 +1,62 @@
+$ docker rm -f n-a n-b n-c; docker network rm lab2-net
+Error response from daemon: network lab2-net not found
+exit status 1
+
+$ docker network create lab2-net
+c4ac2288609110cd247662da08de4fdd5e9a3811e2b569e8ffcb8fc668022c9f
+
+$ docker run -d --name n-a --network lab2-net public.ecr.aws/docker/library/ubuntu:24.04 sleep infinity
+c1b9df9e9d7d8a132bcf55aadab5e371ed6786490cebc16df45cdcc5c6f61eab
+
+$ docker run -d --name n-b --network lab2-net public.ecr.aws/docker/library/ubuntu:24.04 sleep infinity
+995db588abd297a2a3c3bf4ff3663764b437abd82ee3e8b34af83ac2e5a94af3
+
+$ docker run -d --name n-c public.ecr.aws/docker/library/ubuntu:24.04 sleep infinity
+f45a78f86a1229b14b555fe8f1cbbf688daa2b748360012ec98cccb28428d682
+
+$ docker exec n-a sh -c 'apt-get update -qq && apt-get install -y -qq iputils-ping >/dev/null' && echo installed
+debconf: delaying package configuration, since apt-utils is not installed
+installed
+
+$ docker exec n-c sh -c 'apt-get update -qq && apt-get install -y -qq iputils-ping >/dev/null' && echo installed
+debconf: delaying package configuration, since apt-utils is not installed
+installed
+
+$ docker inspect n-a n-b --format '{{.Name}} {{(index .NetworkSettings.Networks "lab2-net").IPAddress}}'
+/n-a 172.18.0.2
+/n-b 172.18.0.3
+
+$ docker exec n-a ping -c 2 n-b
+PING n-b (172.18.0.3) 56(84) bytes of data.
+64 bytes from n-b.lab2-net (172.18.0.3): icmp_seq=1 ttl=64 time=0.479 ms
+64 bytes from n-b.lab2-net (172.18.0.3): icmp_seq=2 ttl=64 time=0.553 ms
+
+--- n-b ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1004ms
+rtt min/avg/max/mdev = 0.479/0.516/0.553/0.037 ms
+
+$ docker exec n-a ping -c 2 172.18.0.3
+PING 172.18.0.3 (172.18.0.3) 56(84) bytes of data.
+64 bytes from 172.18.0.3: icmp_seq=1 ttl=64 time=0.137 ms
+64 bytes from 172.18.0.3: icmp_seq=2 ttl=64 time=0.343 ms
+
+--- 172.18.0.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1039ms
+rtt min/avg/max/mdev = 0.137/0.240/0.343/0.103 ms
+
+$ docker exec n-c ping -c 1 -W 2 n-b
+ping: n-b: Name or service not known
+
+$ docker exec n-c ping -c 1 -W 2 172.18.0.3
+PING 172.18.0.3 (172.18.0.3) 56(84) bytes of data.
+
+--- 172.18.0.3 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+
+$ docker rm -f n-a n-b n-c; docker network rm lab2-net
+n-a
+n-b
+n-c
+lab2-net
+

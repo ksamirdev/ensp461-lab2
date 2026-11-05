@@ -1,0 +1,60 @@
+$ docker rm -f s-layer s-vol; docker volume rm -f lab2-notes
+lab2-notes
+
+$ docker run -d --name s-layer public.ecr.aws/docker/library/ubuntu:24.04 sleep infinity
+Unable to find image 'public.ecr.aws/docker/library/ubuntu:24.04' locally
+24.04: Pulling from docker/library/ubuntu
+e2d2bb84d022: Pulling fs layer
+2238dc1b4376: Download complete
+e2d2bb84d022: Download complete
+e2d2bb84d022: Pull complete
+Digest: sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852
+Status: Downloaded newer image for public.ecr.aws/docker/library/ubuntu:24.04
+97a6d36978ddd57b96f1ce9c7fb16523951bf33f057de86d543b4212a67a0741
+
+$ docker exec s-layer sh -c 'echo samir-layer-note > /tmp/note.txt; cat /tmp/note.txt'
+samir-layer-note
+
+$ docker rm -f s-layer
+s-layer
+
+$ docker run -d --name s-layer public.ecr.aws/docker/library/ubuntu:24.04 sleep infinity
+f8144e815aaaf467a735c36af6a7b21491f1a985b312b899ae100d9ce93ea3b4
+
+$ docker exec s-layer cat /tmp/note.txt
+cat: /tmp/note.txt: No such file or directory
+
+$ docker rm -f s-layer
+s-layer
+
+$ docker volume create lab2-notes
+lab2-notes
+
+$ docker run -d --name s-vol -v lab2-notes:/data public.ecr.aws/docker/library/ubuntu:24.04 sleep infinity
+ae64bcbd720d0b3ed1bab0566e7b4aab96d63a540d2e5c5013ba64635cccd40f
+
+$ docker exec s-vol sh -c 'echo samir-volume-note > /data/note.txt'
+
+$ docker rm -f s-vol
+s-vol
+
+$ docker run --rm -v lab2-notes:/data public.ecr.aws/docker/library/ubuntu:24.04 cat /data/note.txt
+samir-volume-note
+
+$ docker volume inspect lab2-notes --format '{{.Name}} {{.Driver}} {{.Mountpoint}}'
+lab2-notes local /var/lib/docker/volumes/lab2-notes/_data
+
+$ docker volume rm lab2-notes
+lab2-notes
+
+$ echo from-host > '/home/samir/ensp461-bind/shared.txt'
+
+$ docker run --rm -v '/home/samir/ensp461-bind':/data public.ecr.aws/docker/library/ubuntu:24.04 cat /data/shared.txt
+from-host
+
+$ docker run --rm -v '/home/samir/ensp461-bind':/data public.ecr.aws/docker/library/ubuntu:24.04 sh -c 'echo from-container >> /data/shared.txt'
+
+$ cat '/home/samir/ensp461-bind/shared.txt'
+from-host
+from-container
+

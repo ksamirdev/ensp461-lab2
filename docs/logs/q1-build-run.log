@@ -1,0 +1,224 @@
+$ docker build -f docker/Dockerfile -t ensp461-lab2:2.0.0 . --progress=plain
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 596B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for public.ecr.aws/docker/library/python:3.12-slim
+#2 DONE 5.9s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 88B done
+#3 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 1.15kB done
+#4 DONE 0.1s
+
+#5 [1/6] FROM public.ecr.aws/docker/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54
+#5 resolve public.ecr.aws/docker/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54 0.0s done
+#5 sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0 0B / 249B 0.2s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 0.2s
+#5 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 0B / 1.27MB 0.2s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 0B / 30.21MB 0.2s
+#5 sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0 249B / 249B 1.0s done
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 5.3s
+#5 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 0B / 1.27MB 5.3s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 0B / 30.21MB 5.3s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 10.4s
+#5 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 0B / 1.27MB 10.4s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 1.05MB / 30.21MB 10.4s
+#5 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 1.05MB / 1.27MB 12.6s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 3.15MB / 30.21MB 13.4s
+#5 sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 1.27MB / 1.27MB 14.4s done
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 15.5s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 4.19MB / 30.21MB 18.5s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 20.6s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 5.24MB / 30.21MB 23.6s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0B / 12.06MB 25.7s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 7.34MB / 30.21MB 25.7s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 1.05MB / 12.06MB 27.5s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 9.44MB / 30.21MB 30.3s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 1.05MB / 12.06MB 32.6s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 10.49MB / 30.21MB 35.4s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 1.05MB / 12.06MB 37.7s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 11.53MB / 30.21MB 40.5s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 1.05MB / 12.06MB 42.8s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 12.58MB / 30.21MB 45.6s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 14.68MB / 30.21MB 46.7s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 1.05MB / 12.06MB 47.9s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 16.78MB / 30.21MB 50.6s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 2.10MB / 12.06MB 51.5s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 17.83MB / 30.21MB 55.7s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 2.10MB / 12.06MB 56.6s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 19.92MB / 30.21MB 57.8s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 22.02MB / 30.21MB 61.2s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 2.10MB / 12.06MB 61.7s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 24.12MB / 30.21MB 64.4s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 2.10MB / 12.06MB 66.8s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 3.15MB / 12.06MB 67.7s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 26.21MB / 30.21MB 67.7s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 28.31MB / 30.21MB 71.7s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 3.15MB / 12.06MB 72.8s
+#5 sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 30.21MB / 30.21MB 74.8s done
+#5 extracting sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef
+#5 extracting sha256:acd43e9bebc37bc4ba7a5f47bd7598913337803e53d468f37d940f11f5d5f1ef 0.5s done
+#5 extracting sha256:0373269344dc260a94623aecbafee3cf336984ad3bbe8a49ac047d85aa69be9b 0.0s done
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 4.19MB / 12.06MB 75.8s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 5.24MB / 12.06MB 76.8s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 6.29MB / 12.06MB 77.6s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 7.34MB / 12.06MB 78.5s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 8.39MB / 12.06MB 79.4s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 9.44MB / 12.06MB 80.3s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 10.49MB / 12.06MB 81.6s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 10.49MB / 12.06MB 86.7s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 11.53MB / 12.06MB 88.7s
+#5 sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 12.06MB / 12.06MB 89.8s done
+#5 extracting sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222
+#5 extracting sha256:0ba3a3e89cd986f09d548ebfd13261fd4ad86bb310bb69923010538e0c5ce222 0.2s done
+#5 extracting sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0
+#5 extracting sha256:70b4f81c82dc6ea2a5fc08c59c75940cc3f45dad8e2038b7773cd1b6ac24c7a0 0.0s done
+#5 DONE 90.3s
+
+#6 [2/6] WORKDIR /srv
+#6 DONE 0.1s
+
+#7 [3/6] COPY app/requirements.txt .
+#7 DONE 0.1s
+
+#8 [4/6] RUN pip install --no-cache-dir -r requirements.txt
+#8 1.613 Collecting flask==3.1.* (from -r requirements.txt (line 1))
+#8 2.886   Downloading flask-3.1.3-py3-none-any.whl.metadata (3.2 kB)
+#8 4.332 Collecting redis==6.* (from -r requirements.txt (line 2))
+#8 4.553   Downloading redis-6.4.0-py3-none-any.whl.metadata (10 kB)
+#8 5.579 Collecting gunicorn==23.* (from -r requirements.txt (line 3))
+#8 6.242   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#8 6.719 Collecting blinker>=1.9.0 (from flask==3.1.*->-r requirements.txt (line 1))
+#8 7.123   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#8 7.416 Collecting click>=8.1.3 (from flask==3.1.*->-r requirements.txt (line 1))
+#8 7.516   Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+#8 7.745 Collecting itsdangerous>=2.2.0 (from flask==3.1.*->-r requirements.txt (line 1))
+#8 7.861   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#8 8.046 Collecting jinja2>=3.1.2 (from flask==3.1.*->-r requirements.txt (line 1))
+#8 8.079   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#8 8.381 Collecting markupsafe>=2.1.1 (from flask==3.1.*->-r requirements.txt (line 1))
+#8 8.459   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
+#8 8.662 Collecting werkzeug>=3.1.0 (from flask==3.1.*->-r requirements.txt (line 1))
+#8 8.724   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#8 8.807 Collecting packaging (from gunicorn==23.*->-r requirements.txt (line 3))
+#8 8.847   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#8 8.876 Downloading flask-3.1.3-py3-none-any.whl (103 kB)
+#8 9.179 Downloading redis-6.4.0-py3-none-any.whl (279 kB)
+#8 10.25 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#8 10.43 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#8 10.49 Downloading click-8.5.0-py3-none-any.whl (125 kB)
+#8 10.94 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#8 11.05 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#8 11.25 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (24 kB)
+#8 11.39 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#8 11.56 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#8 11.72 Installing collected packages: redis, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, flask
+#8 12.16 Successfully installed blinker-1.9.0 click-8.5.0 flask-3.1.3 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 redis-6.4.0 werkzeug-3.1.9
+#8 12.16 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 13.82 
+#8 13.82 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#8 13.82 [notice] To update, run: pip install --upgrade pip
+#8 DONE 14.1s
+
+#9 [5/6] COPY app/ .
+#9 DONE 0.1s
+
+#10 [6/6] RUN useradd --uid 10001 --no-create-home web
+#10 DONE 0.2s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 0.6s done
+#11 exporting manifest sha256:ebfc362fd313fb600194d4843236f3e9176e36c71fe3e112788bc639857b723a 0.0s done
+#11 exporting config sha256:6fe5faccec42def31d8bc528dbf2e25d9aae49962804298ce72878c6773b9028 0.0s done
+#11 exporting attestation manifest sha256:cd33e056524f043504f80dff4c852831d369be737406a14d7202c4e50b7feb8b 0.0s done
+#11 exporting manifest list sha256:f4b6cc5e68438e51659422e0eb4c78e0292f5fb1837fb3eca48efff8353a1024 0.0s done
+#11 naming to docker.io/library/ensp461-lab2:2.0.0 done
+#11 unpacking to docker.io/library/ensp461-lab2:2.0.0
+#11 unpacking to docker.io/library/ensp461-lab2:2.0.0 0.8s done
+#11 DONE 1.5s
+
+$ docker images ensp461-lab2
+IMAGE                ID             DISK USAGE   CONTENT SIZE   EXTRA
+ensp461-lab2:2.0.0   f4b6cc5e6843        227MB         49.9MB        
+
+$ docker history --format 'table {{.CreatedBy}}\t{{.Size}}' --no-trunc=false ensp461-lab2:2.0.0
+CREATED BY                                      SIZE
+CMD ["gunicorn" "--bind" "0.0.0.0:5000" "--w…   0B
+HEALTHCHECK {Test:[CMD-SHELL python -c "impo…   0B
+EXPOSE [5000/tcp]                               0B
+USER web                                        0B
+RUN |1 APP_VERSION=2.0.0 /bin/sh -c useradd …   41kB
+COPY app/ . # buildkit                          4.1kB
+RUN |1 APP_VERSION=2.0.0 /bin/sh -c pip inst…   19.7MB
+COPY app/requirements.txt . # buildkit          4.1kB
+WORKDIR /srv                                    0B
+ENV APP_VERSION=2.0.0 PYTHONUNBUFFERED=1        0B
+ARG APP_VERSION=2.0.0                           0B
+CMD ["python3"]                                 0B
+RUN /bin/sh -c set -eux;  for src in idle3 p…   20.5kB
+RUN /bin/sh -c set -eux;   savedAptMark="$(a…   43.7MB
+ENV PYTHON_SHA256=b5796915dc45ff745cfb4e990a…   0B
+ENV PYTHON_VERSION=3.12.16                      0B
+ENV GPG_KEY=7169605F62C751356D054A26A821E680…   0B
+RUN /bin/sh -c set -eux;  apt-get update;  a…   5.59MB
+ENV LANG=C.UTF-8                                0B
+ENV PATH=/usr/local/bin:/usr/local/sbin:/usr…   0B
+# debian.sh --arch 'arm64' out/ 'trixie' '@1…   109MB
+
+$ docker image inspect ensp461-lab2:2.0.0 --format '{{len .RootFS.Layers}} layers'
+9 layers
+
+$ docker rm -f lab2-web
+
+$ docker run -d --name lab2-web -p 5000:5000 ensp461-lab2:2.0.0
+b0c1b704db827528f4e817b90961ff8a036679bcf05035570e10cff292754b9d
+
+$ docker ps --filter name=lab2-web
+CONTAINER ID   IMAGE                COMMAND                  CREATED         STATUS                            PORTS                                         NAMES
+b0c1b704db82   ensp461-lab2:2.0.0   "gunicorn --bind 0.0…"   3 seconds ago   Up 3 seconds (health: starting)   0.0.0.0:5000->5000/tcp, [::]:5000->5000/tcp   lab2-web
+
+$ curl -s localhost:5000/
+{"environment":"local","owner":"Samir Kumar Gupta","served_by":"b0c1b704db82","service":"ensp461-lab2","version":"2.0.0"}
+
+$ curl -s localhost:5000/health
+{"status":"UP","version":"2.0.0"}
+
+$ docker exec lab2-web id
+uid=10001(web) gid=10001(web) groups=10001(web)
+
+$ docker top lab2-web
+UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD
+10001               9677                9654                2                   23:37               ?                   00:00:00            /usr/local/bin/python3.12 /usr/local/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 app:app
+10001               9719                9677                3                   23:37               ?                   00:00:00            /usr/local/bin/python3.12 /usr/local/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 app:app
+10001               9720                9677                3                   23:37               ?                   00:00:00            /usr/local/bin/python3.12 /usr/local/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 app:app
+
+$ docker logs lab2-web
+[2026-11-05 18:07:58 +0000] [1] [INFO] Starting gunicorn 23.0.0
+[2026-11-05 18:07:58 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
+[2026-11-05 18:07:58 +0000] [1] [INFO] Using worker: sync
+[2026-11-05 18:07:58 +0000] [7] [INFO] Booting worker with pid: 7
+[2026-11-05 18:07:59 +0000] [8] [INFO] Booting worker with pid: 8
+
+$ docker inspect lab2-web --format 'health={{.State.Health.Status}}'
+health=healthy
+
+$ touch app/app.py && docker build -f docker/Dockerfile -t ensp461-lab2:2.0.0 . --progress=plain 2>&1 | grep -E 'CACHED|DONE' | head -12
+#1 DONE 0.0s
+#2 DONE 3.2s
+#3 DONE 0.0s
+#4 DONE 0.0s
+#5 DONE 0.0s
+#6 CACHED
+#7 CACHED
+#8 CACHED
+#9 CACHED
+#10 CACHED
+#11 DONE 0.1s
+
