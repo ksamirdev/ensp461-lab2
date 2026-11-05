@@ -42,6 +42,9 @@ SHOTS = {
     "q6-update": ("q6-rollout.log", [r"docker build", r"history", r"set image .*2\.0\.1", r"rollout status", r"^probe", r"get rs", r"curl"], None, (0, 7)),
     "q6-bad-rollback": ("q6-rollout.log", [r"9\.9\.9", r"rollout status", r"get pods", r"curl", r"history", r"undo", r"^probe"], None, (7, 16)),
     "q6-scaling": ("q6-rollout.log", [r"scale", r"rollout status", r"get deployment"], None, (16, 99)),
+    "q7-setup": ("q7-setup.log", [r"usermod", r"kube/config", r"JAVA_OPTS", r"init.groovy.d", r"systemctl restart", r"api/json", r"curl -sI"]),
+    "q7-build2": ("q7-build2.log", [r"api/json", r"consoleText"], r"^build |Started by|Commit message|\[Pipeline\] \{ \(|passed|docker (build|push)|kubectl (apply|set image)|successfully rolled|BODY=|Deployed|Finished"),
+    "q7-build3": ("q7-build3.log", [r"api/json", r"rollout history", r"get deployment", r"get pods", r"health", r"tags/list"]),
 }
 
 
