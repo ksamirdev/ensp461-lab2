@@ -1,12 +1,14 @@
 """Demo service for ENSP461 Lab 2: health, version and a visit counter."""
 import os
 import socket
+import time
 
 from flask import Flask, jsonify
 from redis import Redis
 from redis.exceptions import RedisError
 
 app = Flask(__name__)
+STARTED = time.monotonic()
 
 
 def version():
@@ -26,7 +28,7 @@ def index():
 
 @app.get("/health")
 def health():
-    return jsonify(status="UP", version=version())
+    return jsonify(status="UP", version=version(), uptime_seconds=int(time.monotonic() - STARTED))
 
 
 @app.get("/visits")

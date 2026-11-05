@@ -9,7 +9,9 @@ client = app.test_client()
 
 def test_health(monkeypatch):
     monkeypatch.setenv("APP_VERSION", "9.9.9")
-    assert client.get("/health").get_json() == {"status": "UP", "version": "9.9.9"}
+    body = client.get("/health").get_json()
+    assert body["status"] == "UP" and body["version"] == "9.9.9"
+    assert body["uptime_seconds"] >= 0
 
 
 def test_index_names_owner():
