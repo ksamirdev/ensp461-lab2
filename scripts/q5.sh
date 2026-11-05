@@ -1,5 +1,5 @@
 . scripts/rec.sh docs/logs/q5-k8s.log
-rec "minikube start --driver=docker --memory=2048 --cpus=2 --insecure-registry=lab2-registry:5000"
+rec "minikube start --driver=docker --memory=2048 --cpus=2 --insecure-registry=lab2-registry:5000 --base-image=docker.io/kicbase/stable:v0.0.51"
 rec "docker network connect minikube lab2-registry; docker inspect lab2-registry --format '{{range \$k,\$v := .NetworkSettings.Networks}}{{\$k}} {{end}}'"
 rec "minikube status"
 rec "kubectl get nodes -o wide"
