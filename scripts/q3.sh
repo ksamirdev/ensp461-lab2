@@ -1,6 +1,6 @@
 . scripts/rec.sh docs/logs/q3-storage.log
 U=public.ecr.aws/docker/library/ubuntu:24.04
-HOSTDIR="$PWD/.lab-bind"; rm -rf "$HOSTDIR"; mkdir -p "$HOSTDIR"
+HOSTDIR="$HOME/ensp461-bind"; rm -rf "$HOSTDIR"; mkdir -p "$HOSTDIR"
 rec "docker rm -f s-layer s-vol; docker volume rm -f lab2-notes"
 rec "docker run -d --name s-layer $U sleep infinity"
 rec "docker exec s-layer sh -c 'echo samir-layer-note > /tmp/note.txt; cat /tmp/note.txt'"
