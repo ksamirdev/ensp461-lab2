@@ -32,7 +32,7 @@ h3 { font-size: 10.5pt; margin: 12px 0 4px; break-after: avoid; }
 blockquote { margin: 0 0 10px; padding: 0; color: #1b1b1b; font-weight: 500; }
 p { margin: 5px 0 8px; }
 pre { background: #f4f4f2; border: 1px solid #e0e0dc; border-radius: 4px; padding: 7px 9px;
-      font: 8.4pt/1.42 Menlo, monospace; white-space: pre-wrap; word-break: break-all; break-inside: avoid; }
+      font: 7.4pt/1.42 Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; break-inside: avoid; }
 code { font: 8.8pt Menlo, monospace; background: #f1f1ee; padding: 0 3px; border-radius: 3px; }
 pre code { background: none; padding: 0; font-size: inherit; }
 figure { margin: 10px 0 14px; break-inside: avoid; text-align: center; }
