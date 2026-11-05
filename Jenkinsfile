@@ -43,11 +43,20 @@ pipeline {
         }
         stage('Smoke test') {
             steps {
+                // Old pods keep serving during their preStop drain after the rollout
+                // reports success, so require several consecutive new-version answers.
                 sh '''
                     NODE_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')
-                    BODY=$(curl -fsS http://$NODE_IP:30080/health)
-                    echo "$BODY"
-                    echo "$BODY" | grep -q "\\"version\\":\\"$VERSION\\""
+                    ok=0
+                    for i in $(seq 30); do
+                        BODY=$(curl -fsS http://$NODE_IP:30080/health || true)
+                        echo "$BODY"
+                        if echo "$BODY" | grep -q "\\"version\\":\\"$VERSION\\""; then ok=$((ok+1)); else ok=0; fi
+                        [ $ok -ge 5 ] && exit 0
+                        sleep 1
+                    done
+                    echo "version $VERSION not served consistently within 30s"
+                    exit 1
                 '''
             }
         }
