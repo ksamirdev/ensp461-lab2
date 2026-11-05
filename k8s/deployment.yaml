@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab2-web
+  labels:
+    app: lab2-web
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: lab2-web
+  template:
+    metadata:
+      labels:
+        app: lab2-web
+    spec:
+      containers:
+        - name: web
+          image: lab2-registry:5000/ensp461-lab2:2.0.0
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: lab2-config
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {memory: 192Mi}
+          readinessProbe:
+            httpGet: {path: /health, port: 5000}
+            periodSeconds: 3
+          livenessProbe:
+            httpGet: {path: /health, port: 5000}
+            initialDelaySeconds: 10
