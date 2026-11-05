@@ -1,0 +1,87 @@
+$ minikube start --driver=docker --memory=2048 --cpus=2 --insecure-registry=lab2-registry:5000 --base-image=docker.io/kicbase/stable:v0.0.51
+* minikube v1.39.0 on Ubuntu 24.04 (lxc/arm64)
+* Using the docker driver based on user configuration
+* Using Docker driver with root privileges
+* Starting "minikube" primary control-plane node in "minikube" cluster
+* Pulling base image v0.0.51 ...
+* Preparing Kubernetes v1.37.0 on containerd 2.3.4 ...
+* Configuring CNI (Container Networking Interface) ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: storage-provisioner, default-storageclass
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+$ docker network connect minikube lab2-registry; docker inspect lab2-registry --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+Error response from daemon: endpoint with name lab2-registry already exists in network minikube
+bridge minikube 
+
+$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+$ kubectl get nodes -o wide
+NAME       STATUS     ROLES           AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION                                CONTAINER-RUNTIME
+minikube   NotReady   control-plane   4s    v1.37.0   192.168.49.2   <none>        Debian GNU/Linux 12 (bookworm)   7.2.12-orbstack-00394-gbecdd6130068 (arm64)   containerd://2.3.4
+
+$ kubectl apply -f k8s/
+configmap/lab2-config created
+deployment.apps/lab2-web created
+service/lab2-web created
+
+$ kubectl rollout status deployment/lab2-web --timeout=180s
+Waiting for deployment spec update to be observed...
+Waiting for deployment spec update to be observed...
+Waiting for deployment "lab2-web" rollout to finish: 0 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 0 of 3 updated replicas are available...
+Waiting for deployment "lab2-web" rollout to finish: 1 of 3 updated replicas are available...
+Waiting for deployment "lab2-web" rollout to finish: 2 of 3 updated replicas are available...
+deployment "lab2-web" successfully rolled out
+
+$ kubectl get deployment,replicaset,service,configmap -l app=lab2-web; kubectl get service lab2-web; kubectl get configmap lab2-config
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/lab2-web   3/3     3            3           119s
+
+NAME                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/lab2-web-fd84f8f84   3         3         3       115s
+NAME       TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+lab2-web   NodePort   10.99.43.65   <none>        80:30080/TCP   119s
+NAME          DATA   AGE
+lab2-config   1      119s
+
+$ kubectl get pods -l app=lab2-web -o wide
+NAME                       READY   STATUS    RESTARTS   AGE    IP           NODE       NOMINATED NODE   READINESS GATES
+lab2-web-fd84f8f84-57wfq   1/1     Running   0          114s   10.244.0.4   minikube   <none>           <none>
+lab2-web-fd84f8f84-d9hs4   1/1     Running   0          114s   10.244.0.2   minikube   <none>           <none>
+lab2-web-fd84f8f84-xqfrb   1/1     Running   0          114s   10.244.0.3   minikube   <none>           <none>
+
+$ kubectl describe deployment lab2-web | grep -E 'Image|Replicas|StrategyType|RollingUpdateStrategy|Environment'
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+RollingUpdateStrategy:  0 max unavailable, 1 max surge
+    Image:      lab2-registry:5000/ensp461-lab2:2.0.0
+    Environment Variables from:
+    Environment:   <none>
+  Available      True    MinimumReplicasAvailable
+
+$ until curl -fs -o /dev/null http://$(minikube ip):30080/health; do sleep 1; done; echo service reachable
+service reachable
+
+$ curl -s http://$(minikube ip):30080/
+{"environment":"minikube","owner":"Samir Kumar Gupta","served_by":"lab2-web-fd84f8f84-xqfrb","service":"ensp461-lab2","version":"2.0.0"}
+
+$ curl -s http://$(minikube ip):30080/health
+{"status":"UP","version":"2.0.0"}
+
+$ for i in 1 2 3 4 5 6; do curl -s http://$(minikube ip):30080/ | python3 -c 'import json,sys;print(json.load(sys.stdin)["served_by"])'; done
+lab2-web-fd84f8f84-xqfrb
+lab2-web-fd84f8f84-xqfrb
+lab2-web-fd84f8f84-xqfrb
+lab2-web-fd84f8f84-xqfrb
+lab2-web-fd84f8f84-d9hs4
+lab2-web-fd84f8f84-d9hs4
+
