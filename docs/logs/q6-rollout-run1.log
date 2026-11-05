@@ -1,0 +1,122 @@
+$ docker build -q --build-arg APP_VERSION=2.0.1 -f docker/Dockerfile -t localhost:5001/ensp461-lab2:2.0.1 . && docker push --quiet localhost:5001/ensp461-lab2:2.0.1
+sha256:a075bcef16f3515b47cbda09f3eda186f04385dc725dd13c5a9341e127bc1c8c
+localhost:5001/ensp461-lab2:2.0.1
+
+$ kubectl rollout history deployment/lab2-web
+deployment.apps/lab2-web 
+REVISION  CHANGE-CAUSE
+1         <none>
+
+
+$ kubectl set image deployment/lab2-web web=lab2-registry:5000/ensp461-lab2:2.0.1 && kubectl annotate deployment/lab2-web kubernetes.io/change-cause='upgrade to 2.0.1' --overwrite
+deployment.apps/lab2-web image updated
+deployment.apps/lab2-web annotated
+
+$ kubectl rollout status deployment/lab2-web --timeout=180s
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+deployment "lab2-web" successfully rolled out
+
+probe: 29 ok, 5 failed
+$ kubectl get rs -l app=lab2-web
+NAME                  DESIRED   CURRENT   READY   AGE
+lab2-web-759bb9c98f   3         3         3       4s
+lab2-web-76b457d86b   0         0         0       37s
+
+$ curl -s http://192.168.49.2:30080/health
+{"status":"UP","version":"2.0.1"}
+
+$ kubectl set image deployment/lab2-web web=lab2-registry:5000/ensp461-lab2:9.9.9-missing && kubectl annotate deployment/lab2-web kubernetes.io/change-cause='bad image' --overwrite
+deployment.apps/lab2-web image updated
+deployment.apps/lab2-web annotated
+
+$ kubectl rollout status deployment/lab2-web --timeout=30s
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+error: timed out waiting for the condition
+
+$ kubectl get pods -l app=lab2-web
+NAME                        READY   STATUS         RESTARTS   AGE
+lab2-web-759bb9c98f-9p76c   1/1     Running        0          32s
+lab2-web-759bb9c98f-m8257   1/1     Running        0          34s
+lab2-web-759bb9c98f-vjgkz   1/1     Running        0          33s
+lab2-web-dfd7f446b-n444s    0/1     ErrImagePull   0          30s
+
+$ curl -s http://192.168.49.2:30080/health
+{"status":"UP","version":"2.0.1"}
+
+$ kubectl rollout history deployment/lab2-web
+deployment.apps/lab2-web 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         upgrade to 2.0.1
+3         bad image
+
+
+$ kubectl rollout undo deployment/lab2-web --to-revision=1
+Warning: resource deployments/lab2-web was previously managed with 'kubectl apply'. Rolling back will not update the kubectl.kubernetes.io/last-applied-configuration annotation, which may cause unexpected behavior on future 'kubectl apply' operations. Consider using 'kubectl apply' with your previous configuration file instead.
+deployment.apps/lab2-web rolled back
+
+$ kubectl rollout status deployment/lab2-web --timeout=180s
+Waiting for deployment "lab2-web" rollout to finish: 0 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 0 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "lab2-web" rollout to finish: 1 old replicas are pending termination...
+deployment "lab2-web" successfully rolled out
+
+probe: 80 ok, 2 failed
+$ curl -s http://192.168.49.2:30080/health
+{"status":"UP","version":"2.0.0"}
+
+$ kubectl scale deployment/lab2-web --replicas=6
+deployment.apps/lab2-web scaled
+
+$ kubectl rollout status deployment/lab2-web --timeout=120s
+Waiting for deployment "lab2-web" rollout to finish: 3 of 6 updated replicas are available...
+Waiting for deployment "lab2-web" rollout to finish: 4 of 6 updated replicas are available...
+Waiting for deployment "lab2-web" rollout to finish: 5 of 6 updated replicas are available...
+deployment "lab2-web" successfully rolled out
+
+$ kubectl get deployment lab2-web; kubectl get pods -l app=lab2-web
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+lab2-web   6/6     6            6           2m
+NAME                        READY   STATUS    RESTARTS   AGE
+lab2-web-76b457d86b-fnjqd   1/1     Running   0          4s
+lab2-web-76b457d86b-nld72   1/1     Running   0          44s
+lab2-web-76b457d86b-qtqhq   1/1     Running   0          4s
+lab2-web-76b457d86b-sbkwz   1/1     Running   0          4s
+lab2-web-76b457d86b-tslmw   1/1     Running   0          40s
+lab2-web-76b457d86b-vn4ps   1/1     Running   0          48s
+
+$ kubectl scale deployment/lab2-web --replicas=2
+deployment.apps/lab2-web scaled
+
+$ kubectl get deployment lab2-web; kubectl get pods -l app=lab2-web
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+lab2-web   2/2     2            2           2m35s
+NAME                        READY   STATUS    RESTARTS   AGE
+lab2-web-76b457d86b-tslmw   1/1     Running   0          75s
+lab2-web-76b457d86b-vn4ps   1/1     Running   0          83s
+
+$ kubectl scale deployment/lab2-web --replicas=3 && kubectl rollout status deployment/lab2-web --timeout=120s
+deployment.apps/lab2-web scaled
+Waiting for deployment "lab2-web" rollout to finish: 2 out of 3 new replicas have been updated...
+Waiting for deployment "lab2-web" rollout to finish: 2 of 3 updated replicas are available...
+deployment "lab2-web" successfully rolled out
+
