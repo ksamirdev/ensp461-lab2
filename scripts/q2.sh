@@ -1,9 +1,13 @@
 . scripts/rec.sh docs/logs/q2-manage.log
 R=localhost:5001/ensp461-lab2
-rec "docker ps --filter name=lab2-web"
+rec "docker rm -f lab2-web; docker run -d --name lab2-web -p 5000:5000 ensp461-lab2:2.0.0"
+sleep 3
+rec "docker ps --filter name=lab2-web --format '{{.Names}} {{.Image}} {{.Status}} {{.Ports}}'"
 rec "docker stop lab2-web"
+rec "docker inspect lab2-web --format 'exit={{.State.ExitCode}} status={{.State.Status}}'"
 rec "docker ps -a --filter name=lab2-web --format '{{.Names}} {{.Status}}'"
 rec "docker start lab2-web"
+rec "docker ps --filter name=lab2-web --format '{{.Names}} {{.Status}}'"
 rec "docker restart lab2-web"
 sleep 3
 rec "curl -s localhost:5000/health"
